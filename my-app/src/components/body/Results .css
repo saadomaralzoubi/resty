@@ -2,5 +2,6 @@
   border: 1px solid black;
   width: 450px;
   height: 300px;
-  margin-left: 35%;
+  margin-left: 0;
+  margin-top: -20px;
 }
