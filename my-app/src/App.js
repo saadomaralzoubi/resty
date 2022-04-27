@@ -12,12 +12,11 @@ class App extends React.Component {
 
     this.state = {
       results: {},
-      count: 0,
     };
   }
 
-  handleForm = (results, count) => {
-    this.setState({ results: results, count: count });
+  handleForm = (results) => {
+    this.setState({ results: results });
   };
 
   render() {

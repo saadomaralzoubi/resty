@@ -1,4 +1,4 @@
-import "./Results .css";
+import "./Results .sass";
 
 import React from "react";
 
@@ -8,6 +8,7 @@ class Results extends React.Component {
   render() {
     return (
       <div className="result">
+        <br></br>
         <section>{<JSONPretty data={this.props.data}></JSONPretty>}</section>
       </div>
     );

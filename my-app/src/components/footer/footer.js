@@ -1,4 +1,4 @@
-import "./footer.css";
+import "./footer.sass";
 const Footer = () => (
   <footer>
     <p>&copy; 2022 Code Fellows</p>

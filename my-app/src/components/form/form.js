@@ -1,4 +1,4 @@
-import "./form.css";
+import "./form.sass";
 
 // function Form() {
 //   return (
@@ -44,7 +44,7 @@ class Form extends React.Component {
     super(props);
     this.state = {
       url: "",
-      method: "",
+      method: "GET",
     };
   }
 
@@ -58,25 +58,24 @@ class Form extends React.Component {
     e.preventDefault();
     this.setState({ input: e.target.value });
   };
-
-  handleSubmit = async (e) => {
-    e.preventDefault();
-    const url = e.target.url.value;
-    const method = e.target.method.value;
-    this.setState({ url, method });
-
-    let raw = await fetch(url);
-    let data = await raw.json();
-
-    const count = data.count;
-    const results = data.results;
-
-    this.props.handler(results, count);
-  };
-
   changeMethod = (e) => {
     e.preventDefault();
     this.setState({ method: e.target.value });
+  };
+  handleSubmit = async (e) => {
+    e.preventDefault();
+    const url = e.target.url.value;
+
+    this.setState({ url });
+    console.log(url);
+
+    let raw = await fetch(url);
+    let data = await raw.json();
+    console.log(data);
+
+    const results = data;
+
+    this.props.handler(results);
   };
 
   render() {
@@ -111,7 +110,7 @@ class Form extends React.Component {
 
         <div id="textarea">
           <span>
-            {this.state.method} {this.state.url}
+            {this.state.method}&nbsp; &nbsp; {this.state.url}
           </span>
         </div>
       </main>
