@@ -1,121 +1,74 @@
+import React, { useState } from "react";
 import "./form.sass";
-
-// function Form() {
-//   return (
-//     <div className="form">
-//       <form>
-//         <label>URL: </label>
-//         <input
-//           type="text"
-//           placeholder="http://localhost:3000/"
-//           name="url"
-//           id="go"
-//         />
-
-//         <button type="submit">GO!</button>
-
-//         <div class="div-buttons">
-//           <button type="radio" value={`GET`} class="btn">
-//             GET
-//           </button>
-//           <button type="radio" value={`POST`} class="btn">
-//             {" "}
-//             POST
-//           </button>
-//           <button type="radio" value={`PUT`} class="btn">
-//             PUT
-//           </button>
-//           <button type="radio" value={`DELETE`} class="btn">
-//             {" "}
-//             DELETE
-//           </button>
-//         </div>
-//       </form>
-//     </div>
-//   );
-// }
-
-// export default Form;
-import React from "react";
-// import './form.scss';
-
-class Form extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      url: "",
-      method: "GET",
-    };
-  }
-
-  urlClicker = (e) => {
-    e.preventDefault();
-    this.setState({
-      url: this.state.input,
-    });
-  };
-  handleUrl = (e) => {
-    e.preventDefault();
-    this.setState({ input: e.target.value });
-  };
-  changeMethod = (e) => {
-    e.preventDefault();
-    this.setState({ method: e.target.value });
-  };
-  handleSubmit = async (e) => {
-    e.preventDefault();
-    const url = e.target.url.value;
-
-    this.setState({ url });
-    console.log(url);
-
-    let raw = await fetch(url);
-    let data = await raw.json();
-    console.log(data);
-
-    const results = data;
-
-    this.props.handler(results);
-  };
-
-  render() {
-    return (
-      <main>
-        <form className="form" onSubmit={this.handleSubmit}>
-          <label>URL: </label>
-          <input
-            type="text"
-            placeholder="http://localhost:3000/"
-            name="url"
-            id="go"
-          />
-
-          <button type="submit">GO!</button>
-
-          <div id="div-buttons">
-            <button value={`GET`} onClick={this.changeMethod} class="btn">
-              GET
-            </button>
-            <button value={`POST`} onClick={this.changeMethod} class="btn">
-              POST
-            </button>
-            <button value={`PUT`} onClick={this.changeMethod} class="btn">
-              PUT
-            </button>
-            <button value={`DELETE`} onClick={this.changeMethod} class="btn">
-              DELETE
-            </button>
-          </div>
-        </form>
-
-        <div id="textarea">
-          <span>
-            {this.state.method}&nbsp; &nbsp; {this.state.url}
-          </span>
-        </div>
-      </main>
+export default function Form(props) {
+  const [url, setUrl] = useState();
+  const [method, setMethod] = useState("GET");
+  const [body, setBody] = useState();
+  const handleMethod = (event) => {
+    let elems = document.querySelectorAll("span");
+    elems.forEach(
+      (elem) => (elem.style.backgroundColor = "rgb(175, 176, 182)")
     );
-  }
-}
+    document.getElementById(`${event.target.id}`).style.backgroundColor =
+      "white";
+    setMethod(event.target.id);
+  };
+  const handleBody = (event) => {
+    event.preventDefault();
+    let newBody = event.target.value;
+    setBody(newBody);
+  };
+  const handleURL = (event) => {
+    event.preventDefault();
+    let newURL = event.target.value;
+    setUrl(newURL);
+  };
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const formData = {
+      method: method,
+      url: url,
+      body: null,
+    };
+    if (body) formData.body = body;
+    props.handleApiCall(formData);
+  };
+  return (
+    <>
+      <form onSubmit={handleSubmit}>
+        <div className="form">
+          <label>
+            <label className="methods">
+              <span data-testid="GET" id="GET" onClick={handleMethod}>
+                GET
+              </span>
+              <span id="POST" onClick={handleMethod}>
+                POST
+              </span>
+              <span id="PUT" onClick={handleMethod}>
+                PUT
+              </span>
+              <span id="DELETE" onClick={handleMethod}>
+                DELETE
+              </span>
+            </label>
+            <input name="url" type="text" onChange={handleURL} />
+            <button type="submit"> {method} </button>
+          </label>
+        </div>
 
-export default Form;
+        <div>
+          <div className="flex flex-col">
+            <label htmlFor="json" id="h"> Json</label>
+            <textarea
+              onChange={handleBody}
+              type="textarea"
+              id="text"
+              defaultValue="{}"
+            />
+          </div>
+        </div>
+      </form>
+    </>
+  );
+}

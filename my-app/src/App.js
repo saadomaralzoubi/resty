@@ -1,34 +1,39 @@
+import React, { useState } from "react";
+
 import "./App.css";
-import React from "react";
-
 import Header from "./components/header/header";
-import Form from "./components/form/form";
 import Footer from "./components/footer/footer";
+import Form from "./components/form/form";
 import Results from "./components/body/Results ";
-
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      results: {},
-    };
-  }
-
-  handleForm = (results) => {
-    this.setState({ results: results });
-  };
-
-  render() {
-    return (
-      <>
-        <Header />
-        <Form handler={this.handleForm} />
-        <Results data={this.state} />
-        <Footer />
-      </>
+import axios from "axios";
+export default function App() {
+  const [data, setData] = useState(null);
+  const [requestParams, setRequest] = useState({});
+  const handleApiCall = async (requestParams) => {
+    setRequest(requestParams);
+    let methodCall = requestParams.method.toLowerCase();
+    const response = await axios[methodCall](
+      requestParams.url,
+      requestParams.body ? requestParams.body : null
     );
-  }
-}
+    const result = {
+      results: response.data,
+    };
 
-export default App;
+    setData(result);
+  };
+  return (
+    <React.Fragment>
+      <Header />
+      <div className="body">
+        <Form handleApiCall={handleApiCall} />
+        <Results
+          data={data}
+          url={requestParams.url}
+          method={requestParams.method}
+        />
+      </div>
+      <Footer />
+    </React.Fragment>
+  );
+}
