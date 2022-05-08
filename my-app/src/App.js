@@ -17,7 +17,10 @@ export default function App() {
       requestParams.body ? requestParams.body : null
     );
     const result = {
-      results: response.data,
+      headers: {
+        headers: response.headers,
+        results: response.data,
+      },
     };
 
     setData(result);
