@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import "./App.css";
 import Header from "./components/header/header";
@@ -9,9 +9,13 @@ import axios from "axios";
 export default function App() {
   const [data, setData] = useState(null);
   const [requestParams, setRequest] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleApiCall = async (requestParams) => {
     setRequest(requestParams);
+
     let methodCall = requestParams.method.toLowerCase();
+    setIsLoading(true);
     const response = await axios[methodCall](
       requestParams.url,
       requestParams.body ? requestParams.body : null
@@ -24,17 +28,27 @@ export default function App() {
     };
 
     setData(result);
+    setIsLoading(false);
   };
+
+  useEffect(() => {
+    if (requestParams !== null) return;
+    handleApiCall(requestParams);
+  }, [requestParams]);
   return (
     <React.Fragment>
       <Header />
       <div className="body">
         <Form handleApiCall={handleApiCall} />
-        <Results
-          data={data}
-          url={requestParams.url}
-          method={requestParams.method}
-        />
+        {isLoading ? (
+          <p>Loading ...</p>
+        ) : (
+          <Results
+            data={data}
+            url={requestParams.url}
+            method={requestParams.method}
+          />
+        )}
       </div>
       <Footer />
     </React.Fragment>
