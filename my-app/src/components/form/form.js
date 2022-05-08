@@ -5,12 +5,6 @@ export default function Form(props) {
   const [method, setMethod] = useState("GET");
   const [body, setBody] = useState();
   const handleMethod = (event) => {
-    let elems = document.querySelectorAll("span");
-    elems.forEach(
-      (elem) => (elem.style.backgroundColor = "rgb(175, 176, 182)")
-    );
-    document.getElementById(`${event.target.id}`).style.backgroundColor =
-      "white";
     setMethod(event.target.id);
   };
   const handleBody = (event) => {
@@ -59,7 +53,10 @@ export default function Form(props) {
 
         <div>
           <div className="flex flex-col">
-            <label htmlFor="json" id="h"> Json</label>
+            <label htmlFor="json" id="h">
+              {" "}
+              Json
+            </label>
             <textarea
               onChange={handleBody}
               type="textarea"
