@@ -12,10 +12,6 @@ const initialState = {
   request: [],
 };
 
-// export const action ={
-//   ADD_TO_HISTORY: 'ADD_TO_HISTORY',
-//   REMOVE_FROM_HISTORY: 'REMOVE_FROM_HISTORY'
-// }
 
 const reducer = (state = initialState, action) => {
   const { type, payload } = action;
