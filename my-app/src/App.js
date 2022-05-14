@@ -1,12 +1,45 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useReducer } from "react";
 
 import "./App.css";
 import Header from "./components/header/header";
 import Footer from "./components/footer/footer";
 import Form from "./components/form/form";
 import Results from "./components/body/Results ";
+import History from "./components/history/history";
 import axios from "axios";
+
+const initialState = {
+  request: [],
+};
+
+// export const action ={
+//   ADD_TO_HISTORY: 'ADD_TO_HISTORY',
+//   REMOVE_FROM_HISTORY: 'REMOVE_FROM_HISTORY'
+// }
+
+const reducer = (state = initialState, action) => {
+  const { type, payload } = action;
+  switch (type) {
+    case "newHistory":
+      const request = [...state.request, payload];
+      return { request };
+    default:
+      return state;
+  }
+};
+
+const newDataSearch = (requestParams, data) => {
+  return {
+    type: "newHistory",
+    payload: {
+      url: requestParams.url,
+      method: requestParams.method,
+      resultData: data,
+    },
+  };
+};
 export default function App() {
+  const [state, dispatch] = useReducer(reducer, initialState);
   const [data, setData] = useState(null);
   const [requestParams, setRequest] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -28,6 +61,8 @@ export default function App() {
     };
 
     setData(result);
+    dispatch(newDataSearch(requestParams, result));
+
     setIsLoading(false);
   };
 
@@ -38,8 +73,14 @@ export default function App() {
   return (
     <React.Fragment>
       <Header />
+
       <div className="body">
         <Form handleApiCall={handleApiCall} />
+        <History
+          data={data}
+          handleApiCall={handleApiCall}
+          history={state.request}
+        />
         {isLoading ? (
           <p>Loading ...</p>
         ) : (
